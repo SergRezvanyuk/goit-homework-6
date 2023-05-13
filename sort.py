@@ -7,10 +7,18 @@ if len(sys.argv) != 2:
     quit()
 p = Path(sys.argv[1])
 print(repr(p))
+# p = Path("F:/")#"video/ttt/")
+
+
 if not p.exists():
     print('Папку', p, 'не знайдено')
-    print (repr(p))
-highest_dir = str(p) + '/' #"d:/Other/"
+    # print (repr(p))
+    sys.exit()
+highest_dir = str(p) + '/' 
+highest_len = len(highest_dir)
+if highest_len <= 4:
+    highest_len = 3
+    pass
 print(Path(highest_dir+'images'))
 
 Path.mkdir(Path(highest_dir+'images'), exist_ok=True)
@@ -65,7 +73,7 @@ def search_subdir(directory_path):#Створює список файлів в �
 
 def refiles(fil):#
     for f in fil:
-        sf = str(f).split('\\')[2]
+        sf = str(f)[highest_len:].split('\\')[0]
         if  sf == 'images' or sf == 'documents' or sf == 'video' or sf == 'audio' or \
         sf == 'archives' or sf == 'unfamiliar' : # Ігноруємо файли сортованих каталогів
             continue
@@ -118,11 +126,14 @@ dir_path = Path(highest_dir)
 folders = [f for f in dir_path.glob('*/') if f.is_dir()]
 sf = str
 for p in folders:
-    sf = str(p).split('\\')[2]
+    # sf = str(p).split('\\')[2]
+    sf = str(p)[highest_len :].split('\\')[0]
     if not (sf == 'images' or sf == 'documents' or sf == 'video' or sf == 'audio' or \
         sf == 'archives' or sf == 'unfamiliar') :
-        shutil.rmtree(str(p))
-
+        try:
+            shutil.rmtree(str(p))
+        except Exception:
+            pass
 with open(highest_dir+'/result.txt', 'w') as res:
     res.write('Список сортованих файлів:\n\n')
     res.write('images: \n')
@@ -158,4 +169,7 @@ print(n_suffix)
 print(u_suffix)
 
 #print(list_dir)
+
+
+
 
